@@ -30,6 +30,69 @@ var config = {
     // will be used activeExperiments tagging
     "studyName": "buttonFeatureExperiment",
 
+    async getCampaignId() {
+      if (this.variation) {
+        return this.variation.campaign_id;
+      }
+      // TODO bdanforth: handle non-override variation case
+    },
+
+    // optional, use to override/decide
+    // Disable this for production!
+    variation: {
+      name: "tp-on-fast",
+      campaign_id: "tp-on-fast",
+    },
+
+    weightedVariations: [
+      // TP OFF, no UI 
+      { name: "control", weight: 1 },
+      // TP ON, no UI
+      { name: "tp-on", weight: 1 },
+      // TP ON, UI (doorhanger && new tab), fast messaging
+      { name: "tp-on-fast", weight: 1 },
+      // TP ON, UI (doorhanger && new tab), private/etc. messaging
+      { name: "tp-on-private", weight: 1 },
+    ],
+
+    campaigns: {
+      "doorhanger": {
+        "campaign_ids": [
+          "tp-on-fast",
+          "tp-on-private",
+        ],
+        "messages": [
+          "Tracking protection is enabled, making Firefox super fast.",
+          "Tracking protection is enabled, protecting your privacy.",
+        ],
+        "newtab_messages": [
+          "Firefox blocked ${blockedRequests} trackers today<br/> and saved you ${minutes} minutes",
+          "Firefox blocked ${blockedRequests} trackers today<br/> from ${blockedEntities} companies that track your browsing",
+          // "Firefox blocked ${blockedRequests} ads today from<br/> ${blockedSites} different websites"
+        ],
+        "urls": [
+          "https://mozilla.org/learn-more-about-tp-study#doorhanger-fast",
+          "https://mozilla.org/learn-more-about-tp-study#doorhanger-private",
+        ],
+      },
+      "opentab": {
+        "campaign_ids": [
+          "tp-on-fast",
+          "tp-on-private",
+        ],
+        "messages": [],
+        "newtab_messages": [
+          "Firefox blocked ${blockedRequests} trackers today<br/> and saved you ${minutes} minutes",
+          "Firefox blocked ${blockedRequests} trackers today<br/> from ${blockedEntities} companies that track your browsing",
+          // "Firefox blocked ${blockedRequests} ads today from<br/> ${blockedSites} different websites",
+        ],
+        "urls": [
+          "https://mozilla.org/learn-more-about-tp-study#opentab-fast",
+          "https://mozilla.org/learn-more-about-tp-study#opentab-private",
+        ],
+      },
+    },
+
     /** **endings**
       * - keys indicate the 'endStudy' even that opens these.
       * - urls should be static (data) or external, because they have to
@@ -90,21 +153,6 @@ var config = {
     // Cu.import can see 'firefox things', but not package things.
     return true;
   },
-
-  /* Button study branches and sample weights
-     - test kittens vs. puppies if we can only have one.
-       - downweight lizards.  Lizards is a 'poison' branch, meant to
-         help control for novelty effect
-  */
-  "weightedVariations": [
-    {"name": "kittens",
-      "weight": 1.5},
-    {"name": "puppers",
-      "weight": 1.5},
-    {"name": "lizard",
-      "weight": 1},  // we want more puppers in our sample
-  ],
-
 
   // Optional: relative to bootstrap.js in the xpi
   "studyUtilsPath": `./StudyUtils.jsm`,

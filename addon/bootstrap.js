@@ -69,13 +69,13 @@ this.Bootstrap = {
     // TODO bdanforth: patch studyUtils to setLoggingLevel as part of setup method
     studyUtils.setLoggingLevel(config.log.studyUtils.level);
 
+    // choose and set variation
+    const variation = await this.selectVariation();
+
     // if addon was just installed, check if user is eligible as specified in Config.jsm
     if ((REASONS[reason]) === "ADDON_INSTALL" && await !this.isEligible(reason)) {
       return;
     }
-
-    // choose and set variation
-    const variation = await this.selectVariation();
 
     /*
     * Adds the study to the active list of telemetry experiments, and sends the "installed"
@@ -120,7 +120,7 @@ this.Bootstrap = {
 
       // QA NOTE:  unload addon specific modules here.
       Cu.unload(`resource://${BASE}/lib/Feature.jsm`);
-      this.feature.shutdown();
+      this.feature.uninit();
 
       // clean up our modules.
       Cu.unload(CONFIGPATH);
@@ -149,7 +149,8 @@ this.Bootstrap = {
     // Services.mm.loadFrameScript("resource://tracking-protection-study/tracking-study-content.js", true);
     // Feature.init();
     // Start up your feature, with specific variation info.
-    this.feature = new Feature({variation, studyUtils, reasonName: REASONS[reason]});
+    this.feature = new Feature({variation, studyUtils, config, reasonName: REASONS[reason]},);
+    this.feature.init(this.api);
   },
 
   /** addon_install ONLY:
@@ -170,20 +171,20 @@ this.Bootstrap = {
   },
 
   async startupWebExtension(webExtension) {
-    webExtension.startup().then(api => {
-      const {browser} = api;
-      /** spec for messages intended for Shield =>
-        * {shield:true,msg=[info|endStudy|telemetry],data=data}
-        */
-      browser.runtime.onMessage.addListener(studyUtils.respondToWebExtensionMessage);
-      // other browser.runtime.onMessage handlers for your addon, if any
-    });
+    const api = await webExtension.startup();
+    this.api = api;
+    const {browser} = api;
+    /** spec for messages intended for Shield =>
+      * {shield:true,msg=[info|endStudy|telemetry],data=data}
+      */
+    browser.runtime.onMessage.addListener(studyUtils.respondToWebExtensionMessage);
+    // other browser.runtime.onMessage handlers for your addon, if any
   },
 
   // choose the variation for this particular user, then set it.
   async selectVariation() {
-    const variation = this.getVariationFromPref(config.weightedVariations) ||
-      await studyUtils.deterministicVariation(config.weightedVariations);
+    const variation = this.getVariationFromPref(config.study.weightedVariations) ||
+      await studyUtils.deterministicVariation(config.study.weightedVariations);
     studyUtils.setVariation(variation);
     log.debug(`studyUtils has config and variation.name: ${variation.name}.  Ready to send telemetry`);
     return variation;
