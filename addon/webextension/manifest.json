@@ -1,12 +1,44 @@
 {
-  "name": "WebExtension-study-BrowserActionButtonChoice",
-  "version": "0.2.0",
   "manifest_version": 2,
-  "background": {
-    "scripts": ["background.js"]
+  "name": "Tracking Protection Experiment",
+  "version": "1.1",
+
+  "description": "Implements tracking protection as a web extension add-on.",
+  "icons": {
+    "48": "img/blok-48.png",
+    "96": "img/blok-96.png"
   },
-  "browser_action": {
-    "browser_style": true,
-    "default_title": "button label"
-  }
+
+  "applications": {
+    "gecko": {
+      "id": "blok@mozilla.org",
+      "strict_min_version": "48.0",
+      "update_url": "https://testpilot.firefox.com/files/blok/updates.json"
+    }
+  },
+
+  "background": {
+    "scripts": ["js/background.bundle.js"]
+  },
+
+  "homepage_url": "https://testpilot.firefox.com/",
+
+  "page_action": {
+    "default_icon": {
+      "19": "img/tracking-protection-16.png",
+      "38": "img/tracking-protection-32.png"
+    },
+    "default_title": "Tracking Protection",
+    "default_popup": "html/popup.html",
+    "browser_style": true
+  },
+
+  "permissions": [
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "tabs",
+    "<all_urls>"
+  ]
+
 }
