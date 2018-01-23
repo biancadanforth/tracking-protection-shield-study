@@ -41,7 +41,7 @@ module.exports = {
     "no-console": "warn",
     "no-shadow": ["error"],
     "no-unused-vars": "error",
-    "no-warning-comments": "off", // TODO: warn
+    "no-warning-comments": ["off", {"location": "anywhere"}], // TODO: warn
     "prefer-const": "warn",
     "prefer-spread": "error",
     "semi": ["error", "always"],
