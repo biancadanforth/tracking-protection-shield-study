@@ -50,7 +50,7 @@ echo "NPM RUN TEST: Building a local copy of Firefox..."
 ./mach build faster
 
 # Step 6: Run the test of interest
-UNIT_TEST_RELATIVE_PATH="devtools/client/responsive.html/test/browser/browser_viewport_basics.js"
+UNIT_TEST_RELATIVE_PATH="browser/base/content/test/plugins/browser_pluginnotification.js"
 echo "NPM RUN TEST: Running the test at ${UNIT_TEST_RELATIVE_PATH}..."
 ./mach mochitest $UNIT_TEST_RELATIVE_PATH
 

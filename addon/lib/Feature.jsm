@@ -305,12 +305,12 @@ class Feature {
   async addPageActionAndPanel(win) {
     // 4.1 Re-implement Tracking Protection to get number of blocked resources
     await this.reimplementTrackingProtection(win);
-    // 4.2 load stylesheet for pageAction panel
-    const uri = Services.io.newURI(this.STYLESHEET_URL);
-    styleSheetService.loadAndRegisterSheet(uri, styleSheetService.AGENT_SHEET);
-    CleanupManager.addCleanupHandler(() => styleSheetService.unregisterSheet(uri, styleSheetService.AGENT_SHEET));
-    // load content into existing windows and listen for new windows to load content in
-    WindowWatcher.start(this.loadIntoWindow.bind(this), this.unloadFromWindow.bind(this), this.onWindowError.bind(this));
+    // // 4.2 load stylesheet for pageAction panel
+    // const uri = Services.io.newURI(this.STYLESHEET_URL);
+    // styleSheetService.loadAndRegisterSheet(uri, styleSheetService.AGENT_SHEET);
+    // CleanupManager.addCleanupHandler(() => styleSheetService.unregisterSheet(uri, styleSheetService.AGENT_SHEET));
+    // // load content into existing windows and listen for new windows to load content in
+    // WindowWatcher.start(this.loadIntoWindow.bind(this), this.unloadFromWindow.bind(this), this.onWindowError.bind(this));
   }
 
   loadIntoWindow(win) {
@@ -766,125 +766,127 @@ class Feature {
   * if it returns { cancel: true }, the request will be blocked.
   */
   onBeforeRequest(details) {
-    const DONT_BLOCK_THE_REQUEST = {};
-    const BLOCK_THE_REQUEST = { cancel: true };
+    this.log.debug("ON BEFORE REQUEST FIRED!!");
+    return {};
+    // const DONT_BLOCK_THE_REQUEST = {};
+    // const BLOCK_THE_REQUEST = { cancel: true };
 
-    // If a request has started while the addon is shutting down and
-    // Feature.jsm has unloaded
-    if (!URL || !Services) {
-      return DONT_BLOCK_THE_REQUEST;
-    }
+    // // If a request has started while the addon is shutting down and
+    // // Feature.jsm has unloaded
+    // if (!URL || !Services) {
+    //   return DONT_BLOCK_THE_REQUEST;
+    // }
 
-    // make sure there is a details object, that the request has a target URL,
-    // and that the resource being requested is going to be loaded into a XUL browser
-    if (details && details.url && details.browser) {
-      const browser = details.browser;
-      // the currently loaded URL for the browser
-      const currentURI = browser.currentURI;
+    // // make sure there is a details object, that the request has a target URL,
+    // // and that the resource being requested is going to be loaded into a XUL browser
+    // if (details && details.url && details.browser) {
+    //   const browser = details.browser;
+    //   // the currently loaded URL for the browser
+    //   const currentURI = browser.currentURI;
 
-      // if no URL is loaded into the browser
-      if (!currentURI) {
-        return DONT_BLOCK_THE_REQUEST;
-      }
+    //   // if no URL is loaded into the browser
+    //   if (!currentURI) {
+    //     return DONT_BLOCK_THE_REQUEST;
+    //   }
 
-      // if there's no URL for the resource that triggered the request
-      if (!details.originUrl) {
-        return DONT_BLOCK_THE_REQUEST;
-      }
+    //   // if there's no URL for the resource that triggered the request
+    //   if (!details.originUrl) {
+    //     return DONT_BLOCK_THE_REQUEST;
+    //   }
 
-      // if the page loaded into the browser is not a "normal webpage"
-      if (currentURI.scheme !== "http" && currentURI.scheme !== "https") {
-        return DONT_BLOCK_THE_REQUEST;
-      }
+    //   // if the page loaded into the browser is not a "normal webpage"
+    //   if (currentURI.scheme !== "http" && currentURI.scheme !== "https") {
+    //     return DONT_BLOCK_THE_REQUEST;
+    //   }
 
-      // the domain name for the current page (e.g. www.nytimes.com)
-      const currentHost = currentURI.host;
-      // the domain name for the entity making the request
-      const host = new URL(details.originUrl).host;
+    //   // the domain name for the current page (e.g. www.nytimes.com)
+    //   const currentHost = currentURI.host;
+    //   // the domain name for the entity making the request
+    //   const host = new URL(details.originUrl).host;
 
-      // Block third-party requests only.
-      if (currentHost !== host
-        && blocklists.hostInBlocklist(this.lists.blocklist, host)) {
-        let counter = 0;
-        if (this.state.blockedResources.has(details.browser)) {
-          counter = this.state.blockedResources.get(details.browser);
-        }
+    //   // Block third-party requests only.
+    //   if (currentHost !== host
+    //     && blocklists.hostInBlocklist(this.lists.blocklist, host)) {
+    //     let counter = 0;
+    //     if (this.state.blockedResources.has(details.browser)) {
+    //       counter = this.state.blockedResources.get(details.browser);
+    //     }
 
-        const rootDomainHost = this.getRootDomain(host);
-        const rootDomainCurrentHost = this.getRootDomain(currentHost);
+    //     const rootDomainHost = this.getRootDomain(host);
+    //     const rootDomainCurrentHost = this.getRootDomain(currentHost);
 
-        // check if host entity is in the entity list;
-        // TODO bdanforth: improve effeciency of this algo
-        // https://github.com/mozilla/blok/blob/master/src/js/requests.js#L18-L27
-        // for a much more efficient implementation
-        for (const entity in this.lists.entityList) {
-          if (this.lists.entityList[entity].resources.includes(rootDomainHost)) {
-            const resources = this.lists.entityList[entity].resources;
-            const properties = this.lists.entityList[entity].properties;
-            // This just means that this "host" is contained in the entity list
-            // and owned by "entity" but we have to check and see if the
-            // "currentHost" is also owned by "entity"
-            // if it is, don't block the request; if it isn't, block the request
-            if (resources.includes(rootDomainCurrentHost)
-              || properties.includes(rootDomainCurrentHost)) {
-              return DONT_BLOCK_THE_REQUEST;
-            }
-          }
-        }
+    //     // check if host entity is in the entity list;
+    //     // TODO bdanforth: improve effeciency of this algo
+    //     // https://github.com/mozilla/blok/blob/master/src/js/requests.js#L18-L27
+    //     // for a much more efficient implementation
+    //     for (const entity in this.lists.entityList) {
+    //       if (this.lists.entityList[entity].resources.includes(rootDomainHost)) {
+    //         const resources = this.lists.entityList[entity].resources;
+    //         const properties = this.lists.entityList[entity].properties;
+    //         // This just means that this "host" is contained in the entity list
+    //         // and owned by "entity" but we have to check and see if the
+    //         // "currentHost" is also owned by "entity"
+    //         // if it is, don't block the request; if it isn't, block the request
+    //         if (resources.includes(rootDomainCurrentHost)
+    //           || properties.includes(rootDomainCurrentHost)) {
+    //           return DONT_BLOCK_THE_REQUEST;
+    //         }
+    //       }
+    //     }
 
-        // If we get this far, we're going to block the request
-        counter++;
-        this.state.blockedResources.set(details.browser, counter);
-        this.state.blockedAds.set(details.browser, Math.floor(this.AD_FRACTION * counter));
-        const timeSavedThisRequest = Math.min(Math.random() * (counter) * 1000, this.MAX_TIME_SAVED_FRACTION * counter * 1000);
-        const timeSavedLastRequest = this.state.timeSaved.get(details.browser);
-        if (timeSavedThisRequest > timeSavedLastRequest) {
-          this.state.timeSaved.set(details.browser, timeSavedThisRequest);
-          this.state.totalTimeSaved += (timeSavedThisRequest - timeSavedLastRequest);
-        }
-        this.state.totalBlockedResources += 1;
-        this.state.totalBlockedAds = Math.floor(this.AD_FRACTION * this.state.totalBlockedResources);
+    //     // If we get this far, we're going to block the request
+    //     counter++;
+    //     this.state.blockedResources.set(details.browser, counter);
+    //     this.state.blockedAds.set(details.browser, Math.floor(this.AD_FRACTION * counter));
+    //     const timeSavedThisRequest = Math.min(Math.random() * (counter) * 1000, this.MAX_TIME_SAVED_FRACTION * counter * 1000);
+    //     const timeSavedLastRequest = this.state.timeSaved.get(details.browser);
+    //     if (timeSavedThisRequest > timeSavedLastRequest) {
+    //       this.state.timeSaved.set(details.browser, timeSavedThisRequest);
+    //       this.state.totalTimeSaved += (timeSavedThisRequest - timeSavedLastRequest);
+    //     }
+    //     this.state.totalBlockedResources += 1;
+    //     this.state.totalBlockedAds = Math.floor(this.AD_FRACTION * this.state.totalBlockedResources);
 
-        Services.mm.broadcastAsyncMessage("TrackingStudy:UpdateContent", {
-          blockedResources: this.state.totalBlockedResources,
-          timeSaved: this.state.totalTimeSaved,
-          blockedAds: this.state.totalBlockedAds,
-        });
-        // If the pageAction panel is showing, update the quantities dynamically
-        if (this.state.pageActionPanelIsShowing) {
-          const firstQuantity = counter;
-          const secondQuantity = this.treatment === "fast"
-            ? this.state.timeSaved.get(details.browser)
-            : this.state.blockedAds.get(details.browser);
-          this.weakEmbeddedBrowser.get().contentWindow.wrappedJSObject
-            .updateTPNumbers(JSON.stringify({
-              treatment: this.treatment,
-              firstQuantity,
-              secondQuantity,
-            }));
-        }
+    //     Services.mm.broadcastAsyncMessage("TrackingStudy:UpdateContent", {
+    //       blockedResources: this.state.totalBlockedResources,
+    //       timeSaved: this.state.totalTimeSaved,
+    //       blockedAds: this.state.totalBlockedAds,
+    //     });
+    //     // If the pageAction panel is showing, update the quantities dynamically
+    //     if (this.state.pageActionPanelIsShowing) {
+    //       const firstQuantity = counter;
+    //       const secondQuantity = this.treatment === "fast"
+    //         ? this.state.timeSaved.get(details.browser)
+    //         : this.state.blockedAds.get(details.browser);
+    //       this.weakEmbeddedBrowser.get().contentWindow.wrappedJSObject
+    //         .updateTPNumbers(JSON.stringify({
+    //           treatment: this.treatment,
+    //           firstQuantity,
+    //           secondQuantity,
+    //         }));
+    //     }
 
-        const enumerator = Services.wm.getEnumerator("navigator:browser");
-        while (enumerator.hasMoreElements()) {
-          const win = enumerator.getNext();
-          // Mac OS has an application window that keeps running even if all
-          // normal Firefox windows are closed.
-          if (win === Services.appShell.hiddenDOMWindow) {
-            continue;
-          }
+    //     const enumerator = Services.wm.getEnumerator("navigator:browser");
+    //     while (enumerator.hasMoreElements()) {
+    //       const win = enumerator.getNext();
+    //       // Mac OS has an application window that keeps running even if all
+    //       // normal Firefox windows are closed.
+    //       if (win === Services.appShell.hiddenDOMWindow) {
+    //         continue;
+    //       }
 
-          // only update pageAction with new blocked requests if we're in the
-          // "private" treatment branch, otherwise we want to display timeSaved
-          // for the "fast" treatment branch
-          if (details.browser === win.gBrowser.selectedBrowser) {
-            this.showPageAction(browser.getRootNode());
-            this.setPageActionCounter(browser.getRootNode(), this.treatment === "private" ? counter : this.state.timeSaved.get(details.browser));
-          }
-        }
-        return BLOCK_THE_REQUEST;
-      }
-    }
-    return DONT_BLOCK_THE_REQUEST;
+    //       // only update pageAction with new blocked requests if we're in the
+    //       // "private" treatment branch, otherwise we want to display timeSaved
+    //       // for the "fast" treatment branch
+    //       if (details.browser === win.gBrowser.selectedBrowser) {
+    //         this.showPageAction(browser.getRootNode());
+    //         this.setPageActionCounter(browser.getRootNode(), this.treatment === "private" ? counter : this.state.timeSaved.get(details.browser));
+    //       }
+    //     }
+    //     return BLOCK_THE_REQUEST;
+    //   }
+    // }
+    // return DONT_BLOCK_THE_REQUEST;
   }
 
   // e.g. takes "www.mozilla.com", and turns it into "mozilla.com"
@@ -986,7 +988,7 @@ class Feature {
     }
 
     // Remove all listeners from existing windows and stop listening for new windows
-    WindowWatcher.stop();
+    // WindowWatcher.stop();
 
     // Remove all listeners from other objects like tabs, <panels> and <browser>s
     await CleanupManager.cleanup();
