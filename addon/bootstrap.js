@@ -52,10 +52,7 @@ this.Bootstrap = {
     // Check if the user is eligible to run this study using the |isEligible|
     // function when the study is initialized (install or upgrade, the latter
     // being interpreted as a new install).
-    if (
-      reason === this.REASONS.ADDON_INSTALL ||
-      reason === this.REASONS.ADDON_UPGRADE
-    ) {
+    if (reason === this.REASONS.ADDON_INSTALL) {
       //  telemetry "enter" ONCE
       studyUtils.firstSeen();
       const eligible = await config.isEligible();
