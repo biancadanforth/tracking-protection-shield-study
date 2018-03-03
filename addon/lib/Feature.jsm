@@ -1131,6 +1131,7 @@ class Feature {
    * Shows the page action button.
    *
    * @param {document} doc The browser.xul document for the page action.
+   * @param {ChromeWindow} win NEEDS_DOC
    * @returns {void}
    */
   showPageAction(doc, win) {

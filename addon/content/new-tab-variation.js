@@ -4,6 +4,8 @@
 
 "use strict";
 
+const {utils: Cu} = Components;
+
 const ABOUT_HOME_URL = "about:home";
 const ABOUT_NEWTAB_URL = "about:newtab";
 const NEW_TAB_CONTAINER_DIV_ID = "tracking-protection-messaging-study-container";
@@ -174,8 +176,7 @@ function handleLoad(evt) {
   const win = evt.target.defaultView;
   const location = win.location.href;
   if (location === ABOUT_NEWTAB_URL || location === ABOUT_HOME_URL) {
-
-    Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
+    Cu.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
     // Don't show new tab page variation in a Private Browsing window
     if (PrivateBrowsingUtils.isContentWindowPrivate(win)) {
       return;
