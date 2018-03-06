@@ -220,7 +220,7 @@ class Feature {
     CleanupManager.addCleanupHandler(() => Services.mm.removeMessageListener("TrackingStudy:NewTabOpenTime", this));
   }
 
-  receiveMessage(msg) {
+  async receiveMessage(msg) {
     switch (msg.name) {
       case "TrackingStudy:InitialContent":
         // msg.target is the <browser> element
@@ -238,7 +238,7 @@ class Feature {
           event: "new-tab-closed",
           newTabOpenTime: String(msg.data),
         });
-        this.addBehaviorMeasure("new_tab_open_times", msg.data);
+        await this.addBehaviorMeasure("new_tab_open_times", msg.data);
         break;
       default:
         throw new Error(`Message type not recognized, ${ msg.name }`);
@@ -870,7 +870,7 @@ class Feature {
     });
   }
 
-  handlePopupHidden() {
+  async handlePopupHidden() {
     const panelType = (this.weakEmbeddedBrowser.get().src === `resource://${STUDY}/content/intro-panel.html`) ?
       "intro-panel" : "page-action-panel";
     if (panelType === "intro-panel") {
@@ -889,7 +889,7 @@ class Feature {
       panel_type: panelType,
       showTime: panelOpenTime.toString(),
     });
-    this.addBehaviorMeasure("panel_open_times", panelOpenTime);
+    await this.addBehaviorMeasure("panel_open_times", panelOpenTime);
   }
 
   /**
@@ -904,7 +904,7 @@ class Feature {
 
   async reportBehaviorSummary() {
     const behaviorSummary = await Storage.get("behavior-summary");
-    return this.telemetry(Object.assign({message_type: "behavior_summary"}, behaviorSummary));
+    await this.telemetry(Object.assign({message_type: "behavior_summary"}, behaviorSummary));
   }
 
   /**
@@ -941,7 +941,7 @@ class Feature {
     const meanValue = valuesArr.reduce((acc, cV) => acc + cV) / valuesArr.length;
     const medianValue = median(valuesArr);
 
-    return Storage.update("behavior-summary", {
+    await Storage.update("behavior-summary", {
       [`${type}`]: JSON.stringify(valuesArr),
       [`${type}_mean`]: String(meanValue),
       [`${type}_median`]: String(medianValue),
@@ -1214,7 +1214,7 @@ class Feature {
     }
   }
 
-  handlePageActionButtonCommand(evt) {
+  async handlePageActionButtonCommand(evt) {
     const win = evt.target.ownerGlobal;
     // Make sure the user clicked on the pageAction button, otherwise
     // once the intro panel is closed by the user clicking a button inside
@@ -1241,12 +1241,11 @@ class Feature {
         this.state.blockedResources.get(win.gBrowser.selectedBrowser) || 0 :
         Math.ceil((this.state.timeSaved.get(win.gBrowser.selectedBrowser) || 0) / 1000);
 
-      Storage.get("behavior-summary").then((behaviorSummary) => {
-        const clicks = Number(behaviorSummary.badge_clicks) + 1;
-        return Storage.update("behavior-summary", {badge_clicks: String(clicks)});
-      });
+      const behaviorSummary = await Storage.get("behavior-summary");
+      const clicks = Number(behaviorSummary.badge_clicks) + 1;
+      await Storage.update("behavior-summary", {badge_clicks: String(clicks)});
 
-      this.telemetry({
+      await this.telemetry({
         message_type: "event",
         event: "page-action-click",
         counter:  String(counter),
@@ -1254,7 +1253,7 @@ class Feature {
         treatment: this.treatment,
       });
 
-      this.addBehaviorMeasure("page_action_counter", counter);
+      await this.addBehaviorMeasure("page_action_counter", counter);
     }
   }
 
