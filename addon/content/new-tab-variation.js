@@ -17,6 +17,7 @@ class TrackingProtectionStudy {
     this.newTabMessage = "";
     this.sendOpenTimeRef = this.sendOpenTime.bind(this);
     this.RADIX = 10; // numerical base for parseInt
+    this.shouldAddNewTabContent = true;
     this.init();
   }
 
@@ -25,6 +26,7 @@ class TrackingProtectionStudy {
     addMessageListener("TrackingStudy:UpdateContent", this);
     addMessageListener("TrackingStudy:ShuttingDown", this);
     addMessageListener("TrackingStudy:Uninstalling", this);
+    addMessageListener("TrackingStudy:OnLocationChange", this);
 
     this.initTimer();
   }
@@ -43,6 +45,13 @@ class TrackingProtectionStudy {
     const doc = this.contentWindow.document;
     this.addContentToNewTabRef = () => this.addContentToNewTab(msg.data, doc);
     switch (msg.name) {
+      case "TrackingStudy:OnLocationChange":
+        if (msg.data.location !== this.ABOUT_HOME_URL || msg.data.location !== this.ABOUT_NEWTAB_URL) {
+          this.shouldAddNewTabContent = false;
+          return;
+        }
+        this.shouldAddNewTabContent = true;
+        break;
       case "TrackingStudy:ShuttingDown":
         this.onShutdown();
         break;
@@ -66,6 +75,10 @@ class TrackingProtectionStudy {
   }
 
   addContentToNewTab(state, doc) {
+    if (!this.shouldAddNewTabContent) {
+      return;
+    }
+
     // if we haven't blocked anything yet, don't modify the page
     if (state.blockedResources) {
       this.newTabMessage = state.newTabMessage;
