@@ -43,10 +43,6 @@
     "properties": ["adversal.com", "adv-adserver.com"],
     "resources": ["adversal.com", "adv-adserver.com"]
   },
-  "Adversal.com": {
-    "properties": ["adversal.com", "adv-adserver.com"],
-    "resources": ["adversal.com", "adv-adserver.com"]
-  },
   "Adventive": {
     "properties": ["adventive.com"],
     "resources": ["adventive.com"]
@@ -1822,20 +1818,6 @@
       "do-not-tracker.org"
     ]
   },
-  "EFF": {
-    "properties": [
-      "eff.org",
-      "trackersimulator.org",
-      "eviltracker.net",
-      "do-not-tracker.org"
-    ],
-    "resources": [
-      "eff.org",
-      "trackersimulator.org",
-      "eviltracker.net",
-      "do-not-tracker.org"
-    ]
-  },
   "Effective Measure": {
     "properties": ["effectivemeasure.com", "effectivemeasure.net"],
     "resources": ["effectivemeasure.com", "effectivemeasure.net"]
@@ -1905,10 +1887,6 @@
   "Etineria": {
     "properties": ["etineria.com", "adwitserver.com"],
     "resources": ["etineria.com", "adwitserver.com"]
-  },
-  "Etarget": {
-    "properties": ["etargetnet.com", "etarget.net"],
-    "resources": ["etargetnet.com", "etarget.net"]
   },
   "Etarget": {
     "properties": ["etargetnet.com", "etarget.net"],
@@ -3637,10 +3615,6 @@
   "Teadma": {
     "properties": ["teadma.com"],
     "resources": ["teadma.com"]
-  },
-  "Teads.tv": {
-    "properties": ["teads.tv"],
-    "resources": ["teads.tv"]
   },
   "Teads.tv": {
     "properties": ["teads.tv"],
