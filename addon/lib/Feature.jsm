@@ -534,8 +534,13 @@ class Feature {
       this.hidePanel("location-change-same-tab", false);
     }
 
-    const doc = browser.getRootNode();
+    // only hide pageAction or reset pageAction if the tab is the focused tab
+    const win = browser.ownerGlobal;
+    if (browser !== win.gBrowser.selectedBrowser) {
+      return;
+    }
 
+    const doc = browser.getRootNode();
     // only show pageAction on http(s) pages
     if (uri.scheme !== "http" && uri.scheme !== "https") {
       this.hidePageAction(doc);
@@ -544,7 +549,6 @@ class Feature {
 
     // if we got this far, this is an http(s) page; show pageAction and
     // reset per-page quantities
-    const win = browser.ownerGlobal;
     this.showPageAction(doc, win);
     this.setPageActionCounter(doc, 0, win);
     this.state.blockedResources.set(browser, 0);
