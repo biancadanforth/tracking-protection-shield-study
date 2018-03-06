@@ -144,8 +144,15 @@ class TrackingProtectionStudy {
       parseInt(state.timeSaved, this.RADIX)
     );
     let message = this.newTabMessage;
-    message = message.replace("${blockedRequests}", parseInt(state.blockedResources, this.RADIX));
-    message = message.replace("${blockedAds}", parseInt(state.blockedAds, this.RADIX));
+    // toLocaleString adds ',' for large number values; ex: 1000 will become 1,000.
+    message = message.replace(
+      "${blockedRequests}",
+      parseInt(state.blockedResources, this.RADIX).toLocaleString()
+    );
+    message = message.replace(
+      "${blockedAds}",
+      parseInt(state.blockedAds, this.RADIX).toLocaleString()
+    );
     message = message.replace("${time}", parsedTime);
     return message;
   }
