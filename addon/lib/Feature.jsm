@@ -526,6 +526,10 @@ class Feature {
       return;
     }
 
+    // Let frame script know that the location has changed, so it doesn't add
+    // about:newtab mod to other pages
+    browser.messageManager.sendAsyncMessage("TrackingStudy:OnLocationChange", { location: uri.spec });
+
     // Hide panels on location change in the same tab if showing
     if (this.state.introPanelIsShowing && this.weakIntroPanelBrowser.get() === browser) {
       this.hidePanel("location-change-same-tab", true);
