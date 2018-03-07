@@ -107,6 +107,12 @@ class TrackingProtectionStudy {
 
       // There's only one <main> element on the new tab page
       const mainEle = doc.getElementsByTagName("main")[0];
+      // It may be possible that <main> isn't available yet if the user
+      // reloads `about:newtab` in the same tab it was originally loaded into,
+      // since frame scripts are only loaded once per tab.
+      if (!mainEle) {
+        return;
+      }
       const searchDiv = mainEle.children[0];
       const parentNode = searchDiv.parentElement;
       parentNode.insertBefore(newContainer, searchDiv.nextSibling);
