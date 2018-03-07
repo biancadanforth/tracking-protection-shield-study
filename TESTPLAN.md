@@ -38,6 +38,7 @@ See the [User Flow](https://github.com/biancadanforth/tracking-protection-shield
 
 ## Functional Tests to Perform
 
+- In the "pseudo-control" treatment for a clean profile, ensure the user does not receive the Tracking Protection onboarding tour (Something like this [page](https://www.mozilla.org/en-US/firefox/59.0/tracking-protection/start/?step=2&newtab=true)) after the study has been installed, #145.
 - When the user proactively changes the state of Tracking Protection (e.g. through `about:preferences` or `about:config`), the study ends, and their updated setting for Tracking Protection is not changed.
 - If the study runs to completion or the user uninstalls the add-on, the study ends, resetting Tracking Protection to its default value (ON in private windows only); #21 .
 - Check for correct surveys given study ending (see #23 ).
@@ -67,18 +68,19 @@ See the [User Flow](https://github.com/biancadanforth/tracking-protection-shield
   - Clicking off the pageAction panel
 - Check that eligibility criteria are correctly met otherwise study ends #35  .
 - If the first site you visit after install has 0 blocked resources, clicking on the pageAction button will show the intro panel, see #110 .
-- Check that there is no UI/prompting in PB mode, see #86 .
+- Check that there is no UI/prompting in Private Browsing mode, see #86 . Note that Tracking Protection will still be enabled, so if a non-private window is open, the session totals on `about:newtab` in the non-private will still increase for pages in Private Browsing.
 
 1. Npm run firefox
 2. Open a new private window
-3. Visit `npr.org` in private window
-4. Notice there is no pageAction badge
-5. Visit `about:home` or `about:newtab`
-6. Notice there is no new tab variation content
-7. With the private window still open, open a new tab in the non-private window
-8. Notice the new tab variation is there and includes totals from the private window.
-9. In the non-private window, visit npr.org.
-10. Notice that the intro panel shows, since this is the first site you have visited in a non-private window since the study has been installed.
+3. Notice the modified `about:privatebrowsing` page in the new tab (no toggle or tour button for Tracking Protection).
+4. Visit `npr.org` in private window
+5. Notice there is no pageAction badge
+6. Visit `about:home` or `about:newtab`
+7. Notice there is no new tab variation content
+8. With the private window still open, open a new tab in the non-private window
+9. Notice the new tab variation is there and includes totals from the private window.
+10. In the non-private window, visit npr.org.
+11. Notice that the intro panel shows, since this is the first site you have visited in a non-private window since the study has been installed.
 - Check that the values in the pageAction panel are per-page (the first number should match the badge number of the pageAction). The values in this page should always be equal to or less than the values in the new tab variation, which are totals per session.
 - Verify that telemetry pings are correct per [TELEMETRY.md](./TELEMETRY.md).
   - In particular, verify that for any of the [study endings](https://github.com/biancadanforth/tracking-protection-shield-study#study-endings) listed in the README, a summary ping is sent before the addon uninstalls.
