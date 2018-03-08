@@ -13,6 +13,7 @@ The purpose of this study is to test various types of messaging around [Tracking
 ## Eligibility
 
 Users are ineligible for the study if:
+* They have set a History preference to "Always use Private Browsing mode". This means every window is a private window.
 * They have already changed their Tracking Protection setting from the default.
 
 ## Treatment Branches
