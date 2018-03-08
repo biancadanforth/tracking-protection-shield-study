@@ -12,8 +12,8 @@
     "multiprocessCompatible": true,
     "hasEmbeddedWebExtension": false,
     "chromeResource": "tracking-protection-messaging-study",
-    "creator": "Bianca Danforth <bdanforth@mozilla.com>",
-    "description": "The purpose of this study is to test various types of messaging around Tracking Protection in Firefox.",
+    "creator": "Mozilla (Bianca Danforth and others <bdanforth@mozilla.com>)",
+    "description": "This Shield study is a temporary add-on created and distributed by Mozilla to better understand the value of Tracking Protection for Firefox users.",
     "bugzilla": "<tbd: bug to attach for signing>",
     "iconPath": "icon.png"
   },
