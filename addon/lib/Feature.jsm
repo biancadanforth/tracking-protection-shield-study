@@ -56,6 +56,8 @@ XPCOMUtils.defineLazyServiceGetter(this, "styleSheetService",
   "@mozilla.org/content/style-sheet-service;1", "nsIStyleSheetService");
 XPCOMUtils.defineLazyModuleGetter(this, "PrivateBrowsingUtils",
   "resource://gre/modules/PrivateBrowsingUtils.jsm");
+XPCOMUtils.defineLazyModuleGetter(this, "RecentWindow",
+"resource:///modules/RecentWindow.jsm");
 // Import URL Web API into module
 Cu.importGlobalProperties(["URL"]);
 // Import addon-specific modules
@@ -171,7 +173,10 @@ class Feature {
     };
 
     // run once now on the most recent window.
-    const win = Services.wm.getMostRecentWindow("navigator:browser");
+    const win = RecentWindow.getMostRecentBrowserWindow({
+      private: false,
+      allowPopups: false,
+    });
 
     /*
     * Note: Why we are using <browser> as the key in each WeakMap in this.state:
@@ -594,7 +599,10 @@ class Feature {
       return;
     }
 
-    const currentWin = Services.wm.getMostRecentWindow("navigator:browser");
+    const currentWin = RecentWindow.getMostRecentBrowserWindow({
+      private: false,
+      allowPopups: false,
+    });
 
     // If user changes tabs but stays within current window we want to update
     // the status of the pageAction, then reshow it if the new page has had any
@@ -730,7 +738,10 @@ class Feature {
       { defineAs: "sendMessageToChrome"}
     );
     // Get the quantities for the pageAction panel for the current page
-    const win = Services.wm.getMostRecentWindow("navigator:browser");
+    const win = RecentWindow.getMostRecentBrowserWindow({
+      private: false,
+      allowPopups: false,
+    });
     if (win.gBrowser.selectedBrowser) {
       const browser = win.gBrowser.selectedBrowser;
       this.updateQuantities(browser);
