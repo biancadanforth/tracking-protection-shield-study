@@ -173,10 +173,7 @@ class Feature {
     };
 
     // run once now on the most recent window.
-    const win = RecentWindow.getMostRecentBrowserWindow({
-      private: false,
-      allowPopups: false,
-    });
+    const win = this.getMostRecentWindow();
 
     /*
     * Note: Why we are using <browser> as the key in each WeakMap in this.state:
@@ -223,6 +220,13 @@ class Feature {
 
     CleanupManager.addCleanupHandler(() => Services.mm.removeMessageListener("TrackingStudy:InitialContent", this));
     CleanupManager.addCleanupHandler(() => Services.mm.removeMessageListener("TrackingStudy:NewTabOpenTime", this));
+  }
+
+  getMostRecentWindow() {
+    return RecentWindow.getMostRecentBrowserWindow({
+      private: false,
+      allowPopups: false,
+    });
   }
 
   async receiveMessage(msg) {
@@ -602,10 +606,7 @@ class Feature {
       return;
     }
 
-    const currentWin = RecentWindow.getMostRecentBrowserWindow({
-      private: false,
-      allowPopups: false,
-    });
+    const currentWin = this.getMostRecentWindow();
 
     // If user changes tabs but stays within current window we want to update
     // the status of the pageAction, then reshow it if the new page has had any
@@ -741,10 +742,7 @@ class Feature {
       { defineAs: "sendMessageToChrome"}
     );
     // Get the quantities for the pageAction panel for the current page
-    const win = RecentWindow.getMostRecentBrowserWindow({
-      private: false,
-      allowPopups: false,
-    });
+    const win = this.getMostRecentWindow();
     if (win.gBrowser.selectedBrowser) {
       const browser = win.gBrowser.selectedBrowser;
       this.updateQuantities(browser);
