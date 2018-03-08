@@ -499,6 +499,9 @@ class Feature {
       && win === this.weakIntroPanelChromeWindow.get()) {
       this.hidePanel("window-deactivate", true);
     }
+    if (this.state.pageActionPanelIsShowing) {
+      this.hidePanel("window-deactivate", false);
+    }
   }
 
   handleWindowClosing(win) {
