@@ -50,6 +50,7 @@ All study endings _except_ `"ineligible"` have a survey at the end of the study.
 * reason = `"user-disable"`: User has uninstalled the addon from `about:addons`
 * reason = `"expired"`: Study has expired.
 * reason = `"ineligible"`: User is ineligible for the study as determined by the `Config.study.isEligible()`. See [Eligibility](https://github.com/biancadanforth/tracking-protection-shield-study#eligibility) in the README.
+* reason = `"user-enabled-auto-private-browsing"`: Some time after install, the user has set a History preference to "Always use Private Browsing mode". This means every window is a private window.
 
 **Study-specific endings**
 * reason= `"user-disabled-builtin-tracking-protection"`: User has lowered the level of Tracking Protection compared to their treatment branch from `about:preferences` or `about:config`.

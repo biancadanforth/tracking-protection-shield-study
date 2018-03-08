@@ -340,7 +340,7 @@ class Feature {
             event: "study-ended",
             reason,
           });
-          await this.endStudy(reason, false);
+          await this.endStudy({ reason }, false);
         }
         break;
     }
@@ -804,7 +804,7 @@ class Feature {
           ui_event: message,
         });
 
-        Storage.update("behavior-summary", {intro_reject: "true"}).then(() => this.endStudy(message));
+        Storage.update("behavior-summary", {intro_reject: "true"}).then(() => this.endStudy({ reason: message }));
         break;
       case "page-action-reject":
         this.log.debug("You clicked 'Disable Protection' on the pageAction panel.");
@@ -831,7 +831,7 @@ class Feature {
           ui_event: message,
         });
 
-        Storage.update("behavior-summary", {reject: "true"}).then(() => this.endStudy(message));
+        Storage.update("behavior-summary", {reject: "true"}).then(() => this.endStudy({ reason: message }));
         break;
       case "browser-resize":
         this.resizeBrowser(JSON.parse(data));
@@ -1297,12 +1297,13 @@ class Feature {
     }
   }
 
+  // reason is an object with a "reason" key
   async endStudy(reason, shouldResetTP = true) {
     this.isStudyEnding = true;
     if (shouldResetTP) {
       this.resetBuiltInTrackingProtection();
     }
-    await this.studyUtils.endStudy({ reason });
+    await this.studyUtils.endStudy(reason);
   }
 
   async uninit() {

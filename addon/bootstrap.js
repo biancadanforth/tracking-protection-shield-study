@@ -23,6 +23,7 @@ XPCOMUtils.defineLazyModuleGetter(this, "Storage",
 
 this.Bootstrap = {
   UI_AVAILABLE_NOTIFICATION: "sessionstore-windows-restored",
+  ALWAYS_PRIVATE_BROWSING_PREF: "browser.privatebrowsing.autostart",
   VARIATION_OVERRIDE_PREF:
     "extensions.tracking_protection_messaging_study.variation_override",
   DURATION_OVERRIDE_PREF:
@@ -64,7 +65,7 @@ this.Bootstrap = {
         // 1. uses config.endings.ineligible.url if any,
         // 2. sends UT for "ineligible"
         // 3. then uninstalls addon
-        await studyUtils.endStudy({reason: "ineligible"});
+        await studyUtils.endStudy({ reason: "ineligible" });
         return;
       }
     }
@@ -78,6 +79,9 @@ this.Bootstrap = {
     if (this.isStudyExpired()) {
       await studyUtils.endStudy({ reason: "expired" });
     }
+
+    // add pref observer to see if user ever turns on auto private browsing
+    Services.prefs.addObserver(this.ALWAYS_PRIVATE_BROWSING_PREF, this);
 
     // log what the study variation and other info is.
     this.log.debug(`info ${JSON.stringify(studyUtils.info())}`);
@@ -182,9 +186,22 @@ this.Bootstrap = {
 
   // eslint-disable-next-line no-unused-vars
   observe(subject, topic, data) {
-    if (topic === this.UI_AVAILABLE_NOTIFICATION) {
-      Services.obs.removeObserver(this, this.UI_AVAILABLE_NOTIFICATION);
-      this.addFeature(this.variation, this.reason);
+    const reason = "user-enabled-auto-private-browsing";
+    switch (topic) {
+      case this.UI_AVAILABLE_NOTIFICATION:
+        Services.obs.removeObserver(this, this.UI_AVAILABLE_NOTIFICATION);
+        this.addFeature(this.variation, this.reason);
+        break;
+      case "nsPref:changed":
+        if (data === this.ALWAYS_PRIVATE_BROWSING_PREF) {
+          // if feature is running, reset Tracking Protection before ending the study
+          if (this.feature) {
+            this.feature.endStudy({ reason });
+          } else {
+            studyUtils.endStudy({ reason });
+          }
+        }
+        break;
     }
   },
 
@@ -243,9 +260,12 @@ this.Bootstrap = {
       Services.prefs.clearUserPref(this.DURATION_OVERRIDE_PREF);
       Services.prefs.clearUserPref(this.VARIATION_OVERRIDE_PREF);
 
+      // Remove pref observer for auto private browsing
+      Services.prefs.removeObserver(this.ALWAYS_PRIVATE_BROWSING_PREF, this);
+
       // If clause neccessary since study could end due to user ineligible or study expired, in which case feature is not initialized
       if (this.feature) {
-        await this.feature.endStudy("user-disable");
+        await this.feature.endStudy({ reason: "user-disable" });
       }
     }
 

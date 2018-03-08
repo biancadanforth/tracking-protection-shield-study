@@ -59,6 +59,9 @@ const config = {
       "expired": {
         "baseUrl": `${SURVEY_URL}?reason=expired`,
       },
+      "user-enabled-auto-private-browsing": {
+        "baseUrl": `${SURVEY_URL}?reason=user-enabled-auto-private-browsing`,
+      },
       /** User defined endings */
       "user-disabled-builtin-tracking-protection": {
         "baseUrl": `${SURVEY_URL}?reason=user-disabled-builtin-tracking-protection`,
