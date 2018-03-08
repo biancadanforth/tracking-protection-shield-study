@@ -20,6 +20,7 @@ const SURVEY_URL = "https://qsurvey.mozilla.com/s3/tp-perception";
 const config = {
   PREF_TP_ENABLED_GLOBALLY: "privacy.trackingprotection.enabled",
   PREF_TP_ENABLED_IN_PRIVATE_WINDOWS: "privacy.trackingprotection.pbmode.enabled",
+  PREF_ALWAYS_PRIVATE_BROWSING: "browser.privatebrowsing.autostart",
 
   // required STUDY key
   "study": {
@@ -99,6 +100,11 @@ const config = {
   // a place to put an 'isEligible' function
   // Will run only during first install attempt
   "isEligible": async function() {
+    const isAlwaysPrivateBrowsing = Services.prefs.getBoolPref(this.PREF_ALWAYS_PRIVATE_BROWSING);
+    if (isAlwaysPrivateBrowsing) {
+      return false;
+    }
+
     const isGloballyEnabled = Services.prefs.getBoolPref(this.PREF_TP_ENABLED_GLOBALLY);
     const isPBModeOnly = Services.prefs.getBoolPref(this.PREF_TP_ENABLED_IN_PRIVATE_WINDOWS);
     // Has user enabled TP globally?
