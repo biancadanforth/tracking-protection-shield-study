@@ -14,7 +14,7 @@
     "chromeResource": "tracking-protection-messaging-study",
     "creator": "Mozilla (Bianca Danforth and others <bdanforth@mozilla.com>)",
     "description": "This Shield study is a temporary add-on created and distributed by Mozilla to better understand the value of Tracking Protection for Firefox users.",
-    "bugzilla": "<tbd: bug to attach for signing>",
+    "bugzilla": "<https://bugzilla.mozilla.org/show_bug.cgi?id=1433473>",
     "iconPath": "icon.png"
   },
   "bugs": {
@@ -72,7 +72,6 @@
     "lint:fixpack": "fixpack",
     "lint:nsp": "nsp check",
     "prebuild": "cp node_modules/shield-studies-addon-utils/dist/StudyUtils.jsm addon/",
-    "sign": "echo 'TBD, see: https://bugzilla.mozilla.org/show_bug.cgi?id=1407757'",
     "test": "bash ./bin/test-in-tree.sh",
     "watch": "onchange 'addon/**' 'package.json' 'template/**' -e addon/install.rdf -e addon/chrome.manifest -e addon/StudyUtils.jsm -- npm run build -- '{{event}} {{changed}} $(date)'"
   }
