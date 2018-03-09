@@ -100,6 +100,7 @@ class Feature {
     this.TP_ENABLED_IN_PRIVATE_WINDOWS = (this.treatment === "control");
     this.PREF_TP_ENABLED_GLOBALLY = "privacy.trackingprotection.enabled";
     this.PREF_TP_ENABLED_IN_PRIVATE_WINDOWS = "privacy.trackingprotection.pbmode.enabled";
+    this.PAGE_ACTION_BUTTON_WRAPPER_ID = "tracking-protection-study-button-wrapper";
     this.PAGE_ACTION_BUTTON_ID = "tracking-protection-study-button";
     this.PANEL_ID = "tracking-protection-study-intro-panel";
 
@@ -444,7 +445,7 @@ class Feature {
     const pageActionButton = win.document.getElementById(`${this.PAGE_ACTION_BUTTON_ID}`);
     if (pageActionButton) {
       pageActionButton.removeEventListener("command", this.handlePageActionButtonCommandRef);
-      pageActionButton.parentElement.removeChild(pageActionButton);
+      pageActionButton.parentElement.remove();
     }
   }
 
@@ -1209,16 +1210,18 @@ class Feature {
     let pageActionButton = doc.getElementById(`${this.PAGE_ACTION_BUTTON_ID}`);
 
     if (!pageActionButton) {
+      const pageActionWrapper = doc.createElementNS(this.XUL_NS, "hbox");
+      pageActionWrapper.setAttribute("id", `${this.PAGE_ACTION_BUTTON_WRAPPER_ID}`);
       pageActionButton = doc.createElementNS(this.XUL_NS, "toolbarbutton");
-      pageActionButton.style.backgroundColor = "green";
       pageActionButton.setAttribute("id", `${this.PAGE_ACTION_BUTTON_ID}`);
       pageActionButton.setAttribute(
         "image",
         `resource://${STUDY}/content/tp-shield.svg`);
       pageActionButton.addEventListener("command", this.handlePageActionButtonCommandRef);
       // listener gets removed when hidePageAction is called or on uninit
+      pageActionWrapper.append(pageActionButton);
 
-      urlbar.append(pageActionButton);
+      urlbar.append(pageActionWrapper);
     }
   }
 
