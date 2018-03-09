@@ -1,0 +1,225 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "tracking-protection-messaging",
+  "description": "Tracking Protection Messaging Shield study data sent as Map(s,s).",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/behavior-summary"
+    },
+    {
+      "$ref": "#/definitions/ui-event"
+    },
+    {
+      "$ref": "#/definitions/panel-shown"
+    },
+    {
+      "$ref": "#/definitions/panel-hidden"
+    },
+    {
+      "$ref": "#/definitions/panel-dismissed"
+    },
+    {
+      "$ref": "#/definitions/page-action-clicked"
+    },
+    {
+      "$ref": "#/definitions/new-tab-closed"
+    },
+    {
+      "$ref": "#/definitions/builtin-tp-modified"
+    }
+  ],
+  "definitions": {
+    "strbool": {
+        "type": "string",
+        "enum": ["true", "false"]
+      },
+    "treatment": {
+    	"type": "string",
+    	"enum": ["private", "fast", "pseudo-contro", "control"]
+    },
+    "panel-type": {
+      "type": "string",
+      "enum": ["intro-panel", "page-action-panel"]
+    },
+    "behavior-summary": {
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": ["behavior-summary"]
+        },
+        "reject": { "$ref": "#/definitions/strbool" },
+        "intro_accept": { "$ref": "#/definitions/strbool" },
+        "intro_reject": { "$ref": "#/definitions/strbool" },
+        "badge_clicks": {
+          "type": "string"
+        },
+        "panel_open_times": {
+          "type": "string"
+        },
+        "panel_open_times_median": {
+          "type": "string"
+        },
+        "panel_open_times_mean": {
+          "type": "string"
+        },
+        "new_tab_open_times": {
+          "type": "string"
+        },
+        "new_tab_open_times_median": {
+          "type": "string"
+        },
+        "new_tab_open_times_mean": {
+          "type": "string"
+        },
+        "page_action_counter": {
+          "type": "string"
+        },
+        "page_action_counter_median": {
+          "type": "string"
+        },
+        "page_action_counter_mean": {
+          "type": "string"
+        },
+        "covariates_profile_age": {
+          "type": "string"
+        },
+        "covariates_dnt_enabled": { "$ref": "#/definitions/strbool" },
+        "covariates_history_enabled": { "$ref": "#/definitions/strbool" },
+        "covariates_app_update_enabled" : { "$ref": "#/definitions/strbool" },
+        "covariates_has_adblocker": { "$ref": "#/definitions/strbool" }
+      },
+      "additionalProperties": false,
+      "minProperties": 18     
+    },
+    "ui-event": {
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": ["event"]
+        },
+        "event": {
+          "type": "string",
+          "enum": ["ui-event"]
+        },
+        "ui_event": {
+          "type": "string",
+          "enum": ["introduction-accept", "introduction-reject", "introduction-confirmation-cancel", "introduction-confirmation-leave-study", "page-action-reject", "page-action-confirmation-cancel", "page-action-confirmation-leave-study"]
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 3
+    },
+    "panel-shown": {
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": ["event"]
+        },
+        "event": {
+          "type": "string",
+          "enum": ["panel-shown"]
+        },
+        "panel_type": {
+          "$ref": "#/definitions/panel-type"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 3
+    },
+    "panel-hidden": {
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": ["event"]
+        },
+        "event": {
+          "type": "string",
+          "enum": ["panel-hidden"]
+        },
+        "panel_type": { "$ref": "#/definitions/panel-type" },
+        "show_time": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 4
+    },
+    "panel-dismissed": {
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": ["event"]
+        },
+        "event": {
+          "type": "string",
+          "enum": ["panel-dismissed"]
+        },
+        "panel_type": { 
+          "type": "string",
+          "enum": ["introduction-panel", "page-action-panel"]
+        },
+        "reason": {
+          "type": "string",
+          "enum": ["page-action-click", "window-deactivate", "window-close", "location-change-same-tab", "location-change-same-tab", "tab-change", "user-clicked-off-panel", "introduction-accept", "introduction-confirmation-leave-study", "page-action-confirmation-leave-study"]
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 4
+    },
+    "page-action-clicked": {
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": ["event"]
+        },
+        "event": {
+          "type": "string",
+          "enum": ["page-action-clicked"]
+        },
+        "counter": {
+          "type": "string"
+        },
+        "is_intro": { "$ref": "#/definitions/strbool" },
+        "treatment": { "$ref": "#/definitions/treatment"}
+      },
+      "additionalProperties": false,
+      "minProperties": 5
+    },
+    "new-tab-closed": {
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": ["event"]
+        },
+        "event": {
+          "type": "string",
+          "enum": ["new-tab-closed"]
+        },
+        "show_time": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 3
+    },
+    "builtin-tp-modified": {
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": ["event"]
+        },
+        "event": {
+          "type": "string",
+          "enum": ["study-ended"]
+        },
+        "reason": {
+          "type": "string",
+          "enum": ["user-enabled-builtin-tracking-protection", "user-disabled-builtin-tracking-protection"]
+        }
+    },
+      "additionalProperties": false,
+      "minProperties": 3
+    }
+  }
+}
