@@ -103,6 +103,11 @@ class Feature {
     this.PAGE_ACTION_BUTTON_WRAPPER_ID = "tracking-protection-study-button-wrapper";
     this.PAGE_ACTION_BUTTON_ID = "tracking-protection-study-button";
     this.PANEL_ID = "tracking-protection-study-intro-panel";
+    // Some CSS styles need to change based on operating system, "WINNT" is Windows,
+    // "Darwin" is Mac and "Linux" is Linux
+    const appInfoOS = Services.appinfo.OS;
+    this.OS = appInfoOS === "WINNT" ? "Windows" : (appInfoOS === "Darwin") ? "Mac" : "Linux";
+
 
     // Estimating # blocked ads as a percentage of # blocked resources
     this.MAX_AD_FRACTION = 0.065;
@@ -230,6 +235,7 @@ class Feature {
           timeSaved: this.state.totalTimeSaved,
           blockedAds: this.state.totalBlockedAds,
           newTabMessage: this.newTabMessages[this.treatment],
+          OS: this.OS,
         });
         break;
       case "TrackingStudy:NewTabOpenTime":
@@ -1136,6 +1142,7 @@ class Feature {
           timeSaved: this.state.totalTimeSaved,
           blockedAds: this.state.totalBlockedAds,
           newTabMessage: this.newTabMessages[this.treatment],
+          OS: this.OS,
         });
         // If the pageAction panel is showing, and the tab is the topmost/active tab,
         // update the quantities dynamically
