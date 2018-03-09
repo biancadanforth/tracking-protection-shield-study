@@ -14,7 +14,6 @@ PLEASE SEE THE JSON SCHEMA FOR DETAILED DESCRIPTION OF THE ADDON-SPECIFIC PING P
 
 The STUDY SPECIFIC ENDINGS this study supports are:
 
-- "expired"
 - "user-enabled-auto-private-browsing"
 - "user-disabled-builtin-tracking-protection"
 - "user-enabled-builtin-tracking-protection"
@@ -64,8 +63,8 @@ These are the `payload` fields from all pings in the `shield-study` and `shield-
 
 // common fields
 
-branch        private        // should describe Question text
-study_name    trackingProtectionMessagingExperiment
+branch        private
+study_name    addon-tracking-protection-messaging-1433473-all-users
 addon_version 1.0.1
 version       3
 
@@ -178,8 +177,8 @@ version       3
 
 // common fields
 
-branch        private        // should describe Question text
-study_name    trackingProtectionMessagingExperiment
+branch        private
+study_name    addon-tracking-protection-messaging-1433473-all-users
 addon_version 1.0.1
 version       3
 
