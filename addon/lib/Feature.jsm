@@ -236,7 +236,7 @@ class Feature {
         this.telemetry({
           message_type: "event",
           event: "new-tab-closed",
-          newTabOpenTime: String(msg.data),
+          show_time: String(msg.data),
         });
         await this.addBehaviorMeasure("new_tab_open_times", msg.data);
         break;
@@ -337,7 +337,7 @@ class Feature {
           this.log.debug("User modified built-in tracking protection settings. Ending study.");
           this.telemetry({
             message_type: "event",
-            event: "study-ended",
+            event: "builtin-tp-modified",
             reason,
           });
           await this.endStudy({ reason }, false);
@@ -895,7 +895,7 @@ class Feature {
       message_type: "event",
       event: "panel-hidden",
       panel_type: panelType,
-      showTime: panelOpenTime.toString(),
+      show_time: panelOpenTime.toString(),
     });
     await this.addBehaviorMeasure("panel_open_times", panelOpenTime);
   }
@@ -912,7 +912,7 @@ class Feature {
 
   async reportBehaviorSummary() {
     const behaviorSummary = await Storage.get("behavior-summary");
-    await this.telemetry(Object.assign({message_type: "behavior_summary"}, behaviorSummary));
+    await this.telemetry(Object.assign({message_type: "behavior-summary"}, behaviorSummary));
   }
 
   /**
@@ -1255,7 +1255,7 @@ class Feature {
 
       await this.telemetry({
         message_type: "event",
-        event: "page-action-click",
+        event: "page-action-clicked",
         counter:  String(counter),
         is_intro: String(isIntroPanel),
         treatment: this.treatment,
