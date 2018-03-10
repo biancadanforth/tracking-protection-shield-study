@@ -1,7 +1,17 @@
-#tracking-protection-study-button {
+#tracking-protection-study-button-wrapper {
+  background-color: green;
+  margin-right: 3px;
   cursor: pointer;
   font-size: .8em;
   border-radius: 5px;
+}
+
+#tracking-protection-study-button {
+  /*
+  * Needed for Linux OS otherwise default toolbarbutton -moz-appearance overrides
+  * some styles like hover and padding.
+  */
+  -moz-appearance: none !important;
 }
 
 #tracking-protection-study-button > .toolbarbutton-text {
@@ -35,6 +45,11 @@
   font-size: 14px;
   font-weight: lighter;
   line-height: 1.25;
+}
+
+#tracking-protection-messaging-study-container.windows-or-linux-os {
+  margin-top: 20px;
+  padding: 0 25px;
 }
 
 #tracking-protection-messaging-study-message::before {

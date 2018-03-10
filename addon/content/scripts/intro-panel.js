@@ -12,7 +12,8 @@ function onChromeListening(copy) {
 
 class IntroPanel {
   constructor(copy) {
-    this.copy = copy;
+    this.copy = JSON.parse(copy);
+    this.OS = this.copy.OS;
 
     if (document.readyState === "complete") {
       this.handleLoad();
@@ -28,6 +29,9 @@ class IntroPanel {
     this.introPanelMessage = document.getElementById("tracking-protection-study-intro-message");
     this.primaryButton = document.getElementById("tracking-protection-study-primary-button");
     this.secondaryButton = document.getElementById("tracking-protection-study-secondary-button");
+    if (this.OS === "Linux") {
+      this.secondaryButton.classList.add("linux-os");
+    }
     this.confirmationPanel = document.getElementById("tracking-protection-study-confirmation-panel-box");
     this.confirmationCancelButton = document.getElementById("tracking-protection-study-confirmation-default-button");
     this.confirmationDisableButton = document.getElementById("tracking-protection-study-confirmation-secondary-button");
@@ -52,9 +56,8 @@ class IntroPanel {
   }
 
   addCustomContent() {
-    const copyParsed = JSON.parse(this.copy);
-    this.introPanelHeading.textContent = copyParsed.introHeader;
-    this.introPanelMessage.textContent = copyParsed.introMessage;
+    this.introPanelHeading.textContent = this.copy.introHeader;
+    this.introPanelMessage.textContent = this.copy.introMessage;
   }
 
   addClickListeners() {
