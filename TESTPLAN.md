@@ -38,6 +38,8 @@ See the [User Flow](https://github.com/biancadanforth/tracking-protection-shield
 
 ## Functional Tests to Perform
 
+- If the user has an ad blocker installed (one of: Disconnect, uBlock Origin, AdBlock Plus, AdBlock for Firefox or Ghostery) before the study installs, the study will end with reason = `ineligible`. There is no survey. (#162)
+- If the user installs one of the ad blockers above during the study, the study ends with reason = `user-installed-ad-blocker`. There is a survey. (#162)
 - In the "pseudo-control" treatment for a clean profile, ensure the user does not receive the Tracking Protection onboarding tour (Something like this [page](https://www.mozilla.org/en-US/firefox/59.0/tracking-protection/start/?step=2&newtab=true)) after the study has been installed, #145.
 - When the user proactively changes the state of Tracking Protection (e.g. through `about:preferences` or `about:config`), the study ends, and their updated setting for Tracking Protection is not changed.
 - If the study runs to completion or the user uninstalls the add-on, the study ends, resetting Tracking Protection to its default value (ON in private windows only); #21 .
@@ -297,7 +299,6 @@ version 3
     "covariates_dnt_enabled": "false",
     "covariates_history_enabled": "true",
     "covariates_app_update_enabled": "true",
-    "covariates_has_adblocker": "false"
   }
 }
 

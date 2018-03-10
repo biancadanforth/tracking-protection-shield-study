@@ -14,6 +14,7 @@ The purpose of this study is to test various types of messaging around [Tracking
 
 Users are ineligible for the study if:
 * They have set a History preference to "Always use Private Browsing mode". This means every window is a private window.
+* They already have a popular ad blocker installed (e.g. uBlock Origin).
 * They have already changed their Tracking Protection setting from the default.
 
 ## Treatment Branches
@@ -57,6 +58,7 @@ All study endings _except_ `"ineligible"` have a survey at the end of the study.
 * reason = `"user-enabled-builtin-tracking-protection"`: User has raised the level of Tracking Protection compared to their treatment branch from `about:preferences` or `about:config`.
 * reason = `"introduction-confirmation-leave-study"`: User has opted to disable Tracking Protection from the Introduction panel confirmation screen.
 * reason = `"page-action-confirmation-leave-study"`: User has opted to disable Tracking Protection from the page action panel confirmation screen.
+* reason = `"user-installed-ad-blocker"`: User has installed an ad blocker which can prevent Tracking Protection from blocking trackers.
 
 ## Testing Preferences
 The following preferences can be set to customize the study behavior for testing purposes.

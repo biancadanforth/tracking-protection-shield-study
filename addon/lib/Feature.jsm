@@ -57,7 +57,7 @@ XPCOMUtils.defineLazyServiceGetter(this, "styleSheetService",
 XPCOMUtils.defineLazyModuleGetter(this, "PrivateBrowsingUtils",
   "resource://gre/modules/PrivateBrowsingUtils.jsm");
 XPCOMUtils.defineLazyModuleGetter(this, "RecentWindow",
-"resource:///modules/RecentWindow.jsm");
+  "resource:///modules/RecentWindow.jsm");
 // Import URL Web API into module
 Cu.importGlobalProperties(["URL"]);
 // Import addon-specific modules
@@ -91,6 +91,15 @@ class Feature {
     this.studyUtils = studyUtils;
     this.reasonName = reasonName;
     this.IsStudyEnding = false;
+
+    this.ADBLOCKER_ID_LIST = [
+      "{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}", // AdblockPlus
+      "uBlock0@raymondhill.net", // uBlock Origin
+      "jid1-NIfFY2CA8fy1tg@jetpack", // Adblock for Firefox
+      "2.0@disconnect.me", // Disconnect
+      "firefox@ghostery.com", // Ghostery
+    ];
+
     // Randomize frame script URL due to bug 1051238.
     this.FRAME_SCRIPT_URL =
     `resource://${STUDY}/content/new-tab-variation.js?${Math.random()}`,
@@ -136,6 +145,8 @@ class Feature {
     this.initLog(logLevel);
 
     this.addContentMessageListeners();
+
+    this.addAddonInstallListener();
 
     // define treatments as STRING: fn(browserWindow, url)
     this.TREATMENTS = {
@@ -222,6 +233,27 @@ class Feature {
     CleanupManager.addCleanupHandler(() => Services.mm.removeMessageListener("TrackingStudy:NewTabOpenTime", this));
   }
 
+  addAddonInstallListener() {
+    AddonManager.addInstallListener(this);
+    CleanupManager.addCleanupHandler(() => AddonManager.removeInstallListener(this));
+  }
+
+  // A standard AddonManager install event listener
+  onInstallEnded(AddonInstallInstance, addon) {
+    if (this.isAdBlocker(addon.id)) {
+      const reason = "user-installed-ad-blocker";
+      this.endStudy({ reason }, true);
+    }
+  }
+
+  // Does the user have any of the top ad blockers installed?
+  isAdBlocker(addonId) {
+    if (this.ADBLOCKER_ID_LIST.includes(addonId)) {
+      return true;
+    }
+    return false;
+  }
+
   getMostRecentWindow() {
     return RecentWindow.getMostRecentBrowserWindow({
       private: false,
@@ -277,21 +309,6 @@ class Feature {
     const initialized = (await Storage.has("behavior-summary"));
     if (initialized) return;
 
-    // does the user have any of the top adblockers?
-    const ADBLOCKER_ID_LIST = [
-      "{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}", // AdblockPlus
-      "uBlock0@raymondhill.net", // uBlock Origin
-      "jid1-NIfFY2CA8fy1tg@jetpack", // Adblock for Firefox
-    ];
-    let containsAddon = false;
-    AddonManager.getAllAddons().then((addons) => {
-      for (const addon of addons) {
-        if (ADBLOCKER_ID_LIST.includes(addon.id)) {
-          containsAddon = true;
-        }
-      }
-    });
-
     // co-variates
     const oldestTimestamp = await ((new ProfileAge()).getOldestProfileTimestamp());
     const profileAgeDays = Math.round((Date.now() - oldestTimestamp) / (1000 * 3600 * 24));
@@ -317,7 +334,6 @@ class Feature {
       covariates_dnt_enabled: String(dntEnabled),
       covariates_history_enabled: String(historyEnabled),
       covariates_app_update_enabled: String(appUpdateEnabled),
-      covariates_has_adblocker: String(containsAddon),
     });
   }
 

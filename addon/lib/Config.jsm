@@ -11,7 +11,10 @@
 
 const { utils: Cu } = Components;
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
-XPCOMUtils.defineLazyModuleGetter(this, "Services", "resource://gre/modules/Services.jsm");
+XPCOMUtils.defineLazyModuleGetter(this, "Services",
+  "resource://gre/modules/Services.jsm");
+XPCOMUtils.defineLazyModuleGetter(this, "AddonManager",
+  "resource://gre/modules/AddonManager.jsm");
 
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "(config|EXPORTED_SYMBOLS)" }]*/
 const EXPORTED_SYMBOLS = ["config"];
@@ -59,6 +62,9 @@ const config = {
       "expired": {
         "baseUrl": `${SURVEY_URL}?reason=expired`,
       },
+      "user-installed-ad-blocker": {
+        "baseUrl": `${SURVEY_URL}?reason=user-installed-ad-blocker`,
+      },
       "user-enabled-auto-private-browsing": {
         "baseUrl": `${SURVEY_URL}?reason=user-enabled-auto-private-browsing`,
       },
@@ -105,6 +111,26 @@ const config = {
   "isEligible": async function() {
     const isAlwaysPrivateBrowsing = Services.prefs.getBoolPref(this.PREF_ALWAYS_PRIVATE_BROWSING);
     if (isAlwaysPrivateBrowsing) {
+      return false;
+    }
+
+    // Does the user have any of the top ad blockers installed?
+    const ADBLOCKER_ID_LIST = [
+      "{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}", // AdblockPlus
+      "uBlock0@raymondhill.net", // uBlock Origin
+      "jid1-NIfFY2CA8fy1tg@jetpack", // Adblock for Firefox
+      "2.0@disconnect.me", // Disconnect
+      "firefox@ghostery.com", // Ghostery
+    ];
+    let containsAddon = false;
+    const addons = await AddonManager.getAllAddons();
+    for (const addon of addons) {
+      if (ADBLOCKER_ID_LIST.includes(addon.id)) {
+        containsAddon = true;
+        continue;
+      }
+    }
+    if (containsAddon) {
       return false;
     }
 

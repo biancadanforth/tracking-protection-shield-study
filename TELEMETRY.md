@@ -19,6 +19,7 @@ The STUDY SPECIFIC ENDINGS this study supports are:
 - "user-enabled-builtin-tracking-protection"
 - "introduction-confirmation-leave-study"
 - "page-action-confirmation-leave-study"
+- "user-installed-ad-blocker"
 
 
 ## `shield-study-addon` pings, specific to THIS study.
@@ -166,7 +167,6 @@ version       3
     "covariates_dnt_enabled": "false",
     "covariates_history_enabled": "true",
     "covariates_app_update_enabled": "false",
-    "covariates_has_adblocker": "false"
   }
 }
 ```
@@ -324,7 +324,6 @@ version       3
     "covariates_dnt_enabled": "false",
     "covariates_history_enabled": "true",
     "covariates_app_update_enabled": "false",
-    "covariates_has_adblocker": "false"
   }
 }
 ```
