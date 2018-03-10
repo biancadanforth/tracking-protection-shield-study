@@ -759,6 +759,7 @@ class Feature {
         pageActionMessage: this.pageActionPanelMessages[this.treatment],
         firstQuantity,
         secondQuantity,
+        OS: this.OS,
       }));
   }
 

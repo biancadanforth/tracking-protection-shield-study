@@ -103,6 +103,10 @@ body {
   cursor: pointer;
 }
 
+#tracking-protection-study-secondary-button.linux-os {
+  font-size: 12px;
+}
+
 #tracking-protection-study-secondary-button:hover {
   text-decoration: underline;
 }
