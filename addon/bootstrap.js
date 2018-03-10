@@ -243,10 +243,10 @@ this.Bootstrap = {
       // Tells already loaded frame scripts to shutdown
       Services.mm.broadcastAsyncMessage("TrackingStudy:Uninstalling");
 
-      if (this.feature)
+      if (this.feature) {
         await this.feature.reportBehaviorSummary();
-
-      await Storage.clear();
+        await Storage.clear();
+      }
     }
 
     // Tells already loaded frame scripts to shutdown
