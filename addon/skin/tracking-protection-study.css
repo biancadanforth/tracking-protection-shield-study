@@ -1,9 +1,17 @@
 #tracking-protection-study-button-wrapper {
-  background: green;
+  background-color: green;
   margin-right: 3px;
   cursor: pointer;
   font-size: .8em;
   border-radius: 5px;
+}
+
+#tracking-protection-study-button {
+  /*
+  * Needed for Linux OS otherwise default toolbarbutton -moz-appearance overrides
+  * some styles like hover and padding.
+  */
+  -moz-appearance: none !important;
 }
 
 #tracking-protection-study-button > .toolbarbutton-text {
