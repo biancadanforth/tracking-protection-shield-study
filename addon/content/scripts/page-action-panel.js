@@ -14,6 +14,9 @@ function onChromeListening(msg) {
 class PageActionPanel {
   constructor(msg) {
     this.msg = msg;
+
+    this.firstQuantityMessage = '<span id="tracking-protection-study-page-action-num-trackers-blocked" class="tracking-protection-study-page-action-quantity">${blockedTrackers}</span><span class="tracking-protection-study-page-action-copy">${trackerUnit}<br />blocked</span>';
+
     this.handleLoadRef = this.handleLoad.bind(this);
     this.handleButtonClickRef = this.handleButtonClick.bind(this);
 
@@ -30,7 +33,7 @@ class PageActionPanel {
     this.pageActionConfirmationPanel = document.getElementById("tracking-protection-study-page-action-confirmation-panel-box");
     this.pageActionConfirmationCancelButton = document.getElementById("tracking-protection-study-confirmation-default-button");
     this.pageActionConfirmationDisableButton = document.getElementById("tracking-protection-study-confirmation-secondary-button");
-    this.pageActionFirstQuantity = document.getElementById("tracking-protection-study-page-action-num-trackers-blocked");
+    this.pageActionFirstQuantity = document.getElementById("tracking-protection-study-page-action-first-quantity");
     this.pageActionSecondQuantity = document.getElementById("tracking-protection-study-page-action-second-quantity");
     this.pageActionMessage = document.getElementById("tracking-protection-study-page-action-message");
     this.addCustomContent();
@@ -56,18 +59,12 @@ class PageActionPanel {
   // This is only called when the pageAction panel goes from not showing to showing
   // it does not live update the values
   addCustomContent() {
-    this.pageActionFirstQuantity.innerText = this.msg.firstQuantity;
-    this.prevFirstQuantity = this.msg.firstQuantity;
-    let secondQuantityMessage = this.msg.pageActionQuantities;
-    // convert time units
-    const { timeSaved, timeUnit } = this.getHumanReadableTime(this.msg.secondQuantity);
-    const blockedAds = this.msg.secondQuantity;
-    secondQuantityMessage = secondQuantityMessage.replace("${blockedAds}", blockedAds);
-    secondQuantityMessage = secondQuantityMessage.replace("${timeSaved}", timeSaved);
-    secondQuantityMessage = secondQuantityMessage.replace("${timeUnit}", timeUnit);
-    // eslint-disable-next-line no-unsanitized/property
-    this.pageActionSecondQuantity.innerHTML = secondQuantityMessage;
     this.pageActionMessage.textContent = this.msg.pageActionMessage;
+    const quantities = {
+      firstQuantity: this.msg.firstQuantity,
+      secondQuantity: this.msg.secondQuantity,
+    };
+    this.updateNumbers(quantities);
   }
 
   addClickListeners() {
@@ -122,7 +119,9 @@ class PageActionPanel {
   }
 
   updateNumbers(quantities) {
-    quantities = JSON.parse(quantities);
+    if (!this.prevFirstQuantity) {
+      this.prevFirstQuantity = this.msg.firstQuantity;
+    }
     let firstQuantity = this.prevFirstQuantity;
     // Make sure another page's values don't
     // make the # blocked resources go below its current value
@@ -130,11 +129,20 @@ class PageActionPanel {
       firstQuantity = quantities.firstQuantity;
       this.prevFirstQuantity = quantities.firstQuantity;
     }
+    const blockedTrackers = firstQuantity;
+    const trackerUnit = blockedTrackers === 1 ? "tracker" : "trackers";
+    let firstQuantityMessage = this.firstQuantityMessage;
+    firstQuantityMessage = firstQuantityMessage.replace("${blockedTrackers}", blockedTrackers);
+    firstQuantityMessage = firstQuantityMessage.replace("${trackerUnit}", trackerUnit);
+    this.pageActionFirstQuantity.innerHTML = firstQuantityMessage;
+    this.prevFirstQuantity = this.msg.firstQuantity;
+
     const { timeSaved, timeUnit } = this.getHumanReadableTime(quantities.secondQuantity);
     const blockedAds = quantities.secondQuantity;
-    this.pageActionFirstQuantity.innerText = firstQuantity;
+    const adUnit = blockedAds === 1 ? "ad" : "ads";
     let secondQuantityHTML = this.msg.pageActionQuantities;
     secondQuantityHTML = secondQuantityHTML.replace("${blockedAds}", blockedAds);
+    secondQuantityHTML = secondQuantityHTML.replace("${adUnit}", adUnit);
     secondQuantityHTML = secondQuantityHTML.replace("${timeSaved}", timeSaved);
     secondQuantityHTML = secondQuantityHTML.replace("${timeUnit}", timeUnit);
     // eslint-disable-next-line no-unsanitized/property
@@ -155,7 +163,7 @@ class PageActionPanel {
 
 // Update quantities dynamically without refreshing the pageAction panel
 function updateTPNumbers(quantities) {
-  pageActionPanel.updateNumbers(quantities);
+  pageActionPanel.updateNumbers(JSON.parse(quantities));
 }
 
 function onShutdown() {

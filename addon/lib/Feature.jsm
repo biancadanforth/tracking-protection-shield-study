@@ -186,7 +186,7 @@ class Feature {
     this.pageActionPanelQuantities = {
       // both branches show one quantity as # blocked resources in addition to one variable quantity
       fast: '<span id="tracking-protection-study-page-action-num-other-quantity" class="tracking-protection-study-page-action-quantity">${timeSaved}</span><span class="tracking-protection-study-page-action-copy">${timeUnit}<br />saved</span>',
-      private: '<span id="tracking-protection-study-page-action-num-other-quantity" class="tracking-protection-study-page-action-quantity">${blockedAds}</span><span class="tracking-protection-study-page-action-copy">ads<br />blocked</span>',
+      private: '<span id="tracking-protection-study-page-action-num-other-quantity" class="tracking-protection-study-page-action-quantity">${blockedAds}</span><span class="tracking-protection-study-page-action-copy">${adUnit}<br />blocked</span>',
     };
 
     this.pageActionPanelMessages = {
