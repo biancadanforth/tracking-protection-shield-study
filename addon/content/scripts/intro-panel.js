@@ -42,6 +42,11 @@ class IntroPanel {
 
   resizeBrowser(panel) {
     const dimensions = this.getPanelDimensions(panel);
+    // Since resizeBrowser is called from both intro-panel.js and page-action-panel.js, I want to let
+    // Feature.jsm know that this resize request is coming from the intro panel.
+    if (this.OS === "Windows") {
+      dimensions.isIntroPanel = true;
+    }
     sendMessageToChrome(
       "browser-resize",
       JSON.stringify(dimensions)

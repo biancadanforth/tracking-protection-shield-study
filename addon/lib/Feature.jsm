@@ -119,6 +119,10 @@ class Feature {
     const appInfoOS = Services.appinfo.OS;
     this.OS = appInfoOS === "WINNT" ? "Windows" : (appInfoOS === "Darwin") ? "Mac" : "Linux";
 
+    if (this.OS === "Windows") {
+      this.shouldIncrementIntroPanelHeight = false;
+      this.introPanelHeight = 320;
+    }
 
     // Estimating # blocked ads as a percentage of # blocked resources
     this.MAX_AD_FRACTION = 0.065;
@@ -135,6 +139,7 @@ class Feature {
     this.onBeforeRequestRef = this.onBeforeRequest.bind(this);
     this.handleChromeWindowClickRef = this.handleChromeWindowClick.bind(this);
     this.onWindowDeactivateRef = this.onWindowDeactivate.bind(this);
+    this.onWindowSizeModeChangeRef = this.onWindowSizeModeChange.bind(this);
 
     this.init(logLevel);
 
@@ -503,6 +508,9 @@ class Feature {
         this.onTabChangeRef,
       );
       win.addEventListener("deactivate", this.onWindowDeactivateRef);
+      if (this.OS === "Windows") {
+        win.addEventListener("sizemodechange", this.onWindowSizeModeChangeRef);
+      }
     }
   }
 
@@ -514,6 +522,33 @@ class Feature {
         this.onTabChangeRef,
       );
       win.removeEventListener("deactivate", this.onWindowDeactivateRef);
+      if (this.OS === "Windows") {
+        win.removeEventListener("sizemodechange", this.onWindowSizeModeChangeRef);
+      }
+    }
+  }
+
+  // On Windows OS, if the intro panel is open when the window is maximized, it goes blank,
+  // so we have to listen for when the window is maximized and reload the HTML
+  // document in that panel.
+  // This listener is only ever called for Windows OS.
+  onWindowSizeModeChange(evt) {
+    const win = evt.target;
+    // We only care if the intro panel is showing in the window that had this event
+    if (!this.state.introPanelIsShowing
+      || win !== this.weakIntroPanelChromeWindow.get()) {
+      return;
+    }
+    const STATE_MAXIMIZED = 1;
+    const STATE_NORMAL = 3;
+    const STATE_FULLSCREEN = 4;
+    switch (win.windowState) {
+      // The only state we don't care about is minimized
+      case STATE_MAXIMIZED:
+      case STATE_NORMAL:
+      case STATE_FULLSCREEN:
+        this.weakEmbeddedBrowser.get().reload();
+        break;
     }
   }
 
@@ -804,8 +839,16 @@ class Feature {
 
   // <browser> height must be set explicitly; base it off content dimensions
   resizeBrowser(dimensions) {
+    // I have to force a reflow of the intro panel inside of the embedded browser to get it to
+    // display correctly in Windows OS on window resize. (Issue #161)
+    if (this.OS === "Windows" && dimensions.isIntroPanel) {
+      this.shouldIncrementIntroPanelHeight = !this.shouldIncrementIntroPanelHeight;
+      this.shouldIncrementIntroPanelHeight ? this.introPanelHeight-- : this.introPanelHeight++;
+      this.weakEmbeddedBrowser.get().style.height = `${this.introPanelHeight}px`;
+    } else {
+      this.weakEmbeddedBrowser.get().style.height = `${ dimensions.height }px`;
+    }
     this.weakEmbeddedBrowser.get().style.width = `${ dimensions.width }px`;
-    this.weakEmbeddedBrowser.get().style.height = `${ dimensions.height }px`;
   }
 
   handleUIEvent(message, data) {
