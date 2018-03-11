@@ -162,18 +162,34 @@ class TrackingProtectionStudy {
   }
 
   updateMessage(state) {
-    const parsedTime = this.getHumanReadableTimeVals(
-      parseInt(state.timeSaved, this.RADIX)
-    );
     let message = this.newTabMessage;
+
+    // Update first quantity: blocked resources/trackers
+    const blockedResources = parseInt(state.blockedResources, this.RADIX);
     // toLocaleString adds ',' for large number values; ex: 1000 will become 1,000.
     message = message.replace(
       "${blockedRequests}",
-      parseInt(state.blockedResources, this.RADIX).toLocaleString()
+      blockedResources.toLocaleString()
     );
+    const trackerUnit = blockedResources === 1 ? "tracker" : "trackers";
+    message = message.replace(
+      "${trackerUnit}",
+      trackerUnit,
+    );
+
+    // Update second quantity: blocked ads or time saved
+    const blockedAds = parseInt(state.blockedAds, this.RADIX);
     message = message.replace(
       "${blockedAds}",
-      parseInt(state.blockedAds, this.RADIX).toLocaleString()
+      blockedAds.toLocaleString()
+    );
+    const adUnit = blockedAds === 1 ? "advertisement" : "advertisements";
+    message = message.replace(
+      "${adUnit}",
+      adUnit
+    );
+    const parsedTime = this.getHumanReadableTimeVals(
+      parseInt(state.timeSaved, this.RADIX)
     );
     message = message.replace("${time}", parsedTime);
     return message;
