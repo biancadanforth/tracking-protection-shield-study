@@ -31,7 +31,7 @@ echo 'Copying all files in `addon/` into the xpi...'
 mkdir -p dist
 
 pushd addon > /dev/null
-zip -r  "../dist/${XPI_NAME}" .
+zip -x  .DS_Store lib/.DS_Store test/ test/browser/ test/browser/.eslintrc.yml test/browser/browser.ini test/browser/browser_tracking_protection_study_ui_check.js test/browser/head.js moz.build jar.mn -r  "../dist/${XPI_NAME}" .
 popd > /dev/null
 
 
