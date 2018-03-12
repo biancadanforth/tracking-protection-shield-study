@@ -157,8 +157,8 @@ Important: This assumes you start with a clean profile.
 Ran at: Sat Mar 03 2018 17:03:25 GMT-0800 (PST)
 
 // common fields
-branch private // should describe Question text
-study_name trackingProtectionMessagingExperiment
+branch private
+study_name addon-tracking-protection-messaging-1433473-all-users  // or addon-tracking-protection-messaging-1433473-new-users
 addon_version 1.0.1
 version 3
 

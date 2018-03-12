@@ -42,7 +42,11 @@ const config = {
     // required keys: studyName, endings, telemetry
 
     // will be used activeExperiments tagging
-    "studyName": "trackingProtectionMessagingExperiment",
+    // This study will run with two recipes, one targeting all users and one
+    // targeting new users.
+    // studyName (all users): "addon-tracking-protection-messaging-1433473-all-users"
+    // studyName (new users): "addon-tracking-protection-messaging-1433473-new-users"
+    "studyName": "addon-tracking-protection-messaging-1433473-all-users",
 
     /** **endings**
       * - keys indicate the 'endStudy' even that opens these.
