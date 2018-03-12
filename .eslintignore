@@ -3,4 +3,5 @@ addon/lib/disconnect-*
 addon/lib/StudyUtils.jsm
 addon/StudyUtils.jsm
 addon/test/*
+dist/*
 test/*

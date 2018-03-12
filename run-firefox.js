@@ -1,4 +1,5 @@
 /* eslint-env node */
+/* eslint-disable no-console */
 
 /* This file is a helper script that will install the extension from the .xpi
  * file and setup useful preferences for debugging. This is the same setup
@@ -18,7 +19,7 @@ const {
   installAddon,
   promiseSetupDriver,
   promiseUrlBar,
-  MODIFIER_KEY
+  MODIFIER_KEY,
 } = require("./test/utils");
 
 
@@ -41,13 +42,13 @@ Future will clean up this interface a bit!
 `;
 
 const minimistHandler = {
-  boolean: [ 'help' ],
-  alias: { h: 'help', v: 'version' },
-  '--': true,
+  boolean: [ "help" ],
+  alias: { h: "help", v: "version" },
+  "--": true,
 };
 
 
-(async() => {
+(async () => {
   const minimist = require("minimist");
   const parsedArgs = minimist(process.argv.slice(2), minimistHandler);
   if (parsedArgs.help) {
@@ -62,7 +63,7 @@ const minimistHandler = {
     // install the addon
     if (process.env.XPI) {
       const fileLocation = path.join(process.cwd(), process.env.XPI);
-      console.log(fileLocation)
+      console.log(fileLocation);
       await installAddon(driver, fileLocation);
       console.log("Load temporary addon.");
     }
@@ -78,6 +79,6 @@ const minimistHandler = {
     await urlBar.sendKeys(openBrowserConsole);
 
   } catch (e) {
-    console.error(e); // eslint-disable-line no-console
+    console.error(e);
   }
 })();

@@ -46,7 +46,7 @@ module.exports = {
     "no-shadow": "error",
     "no-unused-vars": "error",
     "no-var": "error",
-    "no-warning-comments": ["warn", {"terms": ["todo", "fixme", /* TODO: add "needs_doc", */ "xxx"], "location": "anywhere"}],
+    "no-warning-comments": ["warn", {"terms": ["todo", "fixme", "needs_doc", "xxx", "tbd"], "location": "anywhere"}],
     "prefer-const": "warn",
     "prefer-spread": "error",
     "semi": ["error", "always"],
