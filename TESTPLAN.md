@@ -38,6 +38,7 @@ See the [User Flow](https://github.com/biancadanforth/tracking-protection-shield
 
 ## Functional Tests to Perform
 
+- If either panel is open when the user changes the window size mode (i.e. the window is maximized, minimized, made full screen or brought to a "normal" size), the panel will be dismissed.
 - If the user has an ad blocker installed (one of: Disconnect, uBlock Origin, AdBlock Plus, AdBlock for Firefox or Ghostery) before the study installs, the study will end with reason = `ineligible`. There is no survey. (#162)
 - If the user installs one of the ad blockers above during the study, the study ends with reason = `user-installed-ad-blocker`. There is a survey. (#162)
 - In the "pseudo-control" treatment for a clean profile, ensure the user does not receive the Tracking Protection onboarding tour (Something like this [page](https://www.mozilla.org/en-US/firefox/59.0/tracking-protection/start/?step=2&newtab=true)) after the study has been installed, #145.
