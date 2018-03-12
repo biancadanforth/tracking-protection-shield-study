@@ -538,11 +538,12 @@ class Feature {
     const isIntroPanel = this.state.introPanelIsShowing;
 
     const STATE_MAXIMIZED = 1;
+    const STATE_MINIMIZED = 2;
     const STATE_NORMAL = 3;
     const STATE_FULLSCREEN = 4;
     switch (win.windowState) {
-      // The only state we don't care about is minimized
       case STATE_MAXIMIZED:
+      case STATE_MINIMIZED:
       case STATE_NORMAL:
       case STATE_FULLSCREEN:
         this.hidePanel("window-sizemodechange", isIntroPanel);
