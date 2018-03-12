@@ -20,6 +20,9 @@
   "bugs": {
     "url": "https://github.com/biancadanforth/tracking-protection-shield-study/issues"
   },
+  "dependencies": {
+    "shield-studies-addon-utils": "^4.1.0"
+  },
   "devDependencies": {
     "ajv": "^5.1.1",
     "eslint": "^4.18.2",
@@ -40,7 +43,6 @@
     "nsp": "^3.2.1",
     "onchange": "^3.2.1",
     "selenium-webdriver": "^3.5.0",
-    "shield-studies-addon-utils": "^4.1.0",
     "stylelint": "^9.0.0",
     "stylelint-config-standard": "^18.1.0"
   },
