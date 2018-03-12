@@ -38,7 +38,11 @@ class TrackingProtectionStudy {
 
   initTimer() {
     this.openingTime = Math.floor(Date.now() / 1000);
-    this.contentWindow.addEventListener("beforeunload", this.sendOpenTimeRef);
+    this.contentWindow.addEventListener(
+      "beforeunload",
+      this.sendOpenTimeRef,
+      { once: true }
+    );
   }
 
   receiveMessage(msg) {
