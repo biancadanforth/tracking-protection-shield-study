@@ -545,7 +545,7 @@ class Feature {
       case STATE_MAXIMIZED:
       case STATE_NORMAL:
       case STATE_FULLSCREEN:
-        this.hidePanel("window-resize", isIntroPanel);
+        this.hidePanel("window-sizemodechange", isIntroPanel);
         break;
     }
   }
