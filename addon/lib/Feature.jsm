@@ -62,8 +62,6 @@ XPCOMUtils.defineLazyModuleGetter(this, "RecentWindow",
 Cu.importGlobalProperties(["URL"]);
 // Import addon-specific modules
 const STUDY = "tracking-protection-messaging-study";
-XPCOMUtils.defineLazyModuleGetter(this, "canonicalizeHost",
-  `resource://${STUDY}/lib/Canonicalize.jsm`);
 XPCOMUtils.defineLazyModuleGetter(this, "blocklists",
   `resource://${STUDY}/lib/BlockLists.jsm`);
 XPCOMUtils.defineLazyModuleGetter(this, "CleanupManager",
@@ -1427,7 +1425,6 @@ class Feature {
     delete this.state.blockedAds;
     delete this.state.timeSaved;
 
-    Cu.unload(`resource://${STUDY}/lib/Canonicalize.jsm`);
     Cu.unload(`resource://${STUDY}/lib/BlockLists.jsm`);
     Cu.unload(`resource://${STUDY}/lib/CleanupManager.jsm`);
     Cu.unload(`resource://${STUDY}/lib/WindowWatcher.jsm`);
