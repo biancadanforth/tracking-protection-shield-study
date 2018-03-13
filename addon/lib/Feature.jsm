@@ -120,10 +120,10 @@ class Feature {
 
     // Estimating # blocked ads as a percentage of # blocked resources
     this.MAX_AD_FRACTION = 0.065;
-    this.MIN_AD_FRACTION = 0.015;
+    this.MIN_AD_FRACTION = 0.025;
     // Estimating time saved as a percentage of # blocked resources
-    this.MAX_TIME_SAVED_FRACTION = 0.0275;
-    this.MIN_TIME_SAVED_FRACTION = 0.005;
+    this.MAX_TIME_SAVED_FRACTION = 0.0375;
+    this.MIN_TIME_SAVED_FRACTION = 0.015;
 
     this.onTabChangeRef = this.onTabChange.bind(this);
     this.handlePageActionButtonCommandRef = this.handlePageActionButtonCommand.bind(this);
