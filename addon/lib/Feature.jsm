@@ -275,7 +275,6 @@ class Feature {
           timeSaved: this.state.totalTimeSaved,
           blockedAds: this.state.totalBlockedAds,
           newTabMessage: this.newTabMessages[this.treatment],
-          OS: this.OS,
         });
         break;
       case "TrackingStudy:NewTabOpenTime":
@@ -1208,7 +1207,6 @@ class Feature {
             timeSaved: this.state.totalTimeSaved,
             blockedAds: this.state.totalBlockedAds,
             newTabMessage: this.newTabMessages[this.treatment],
-            OS: this.OS,
           });
           // If the pageAction panel is showing, and the tab is the topmost/active tab,
           // update the quantities dynamically
