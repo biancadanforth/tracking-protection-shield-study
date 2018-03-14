@@ -1370,7 +1370,8 @@ class Feature {
     const pageActionButton = doc.getElementById(`${this.PAGE_ACTION_BUTTON_ID}`);
     if (pageActionButton) {
       pageActionButton.removeEventListener("command", this.handlePageActionButtonCommandRef);
-      pageActionButton.parentElement.removeChild(pageActionButton);
+      // pageAction button has a wrapper div due to #151, so removing it also removes the button
+      pageActionButton.parentElement.remove();
     }
   }
 
