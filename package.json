@@ -1,7 +1,7 @@
 {
   "name": "tracking-protection-messaging-study",
   "description": "Tracking Protection Messaging Shield Study",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Mozilla Bianca Danforth <bdanforth@mozilla.com>",
   "addon": {
     "$ABOUT": "use these variables fill the moustache templates",
