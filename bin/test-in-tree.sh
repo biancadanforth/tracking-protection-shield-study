@@ -1,4 +1,4 @@
-# This script automates the process of testing your Shield study addon locally
+# This script automates the process of testing your Shield study add-on locally
 # for a given unit test.
 # It takes the state of your addon's working directory in your GitHub repo and
 # drops it into your local Firefox development directory. You do not need to
