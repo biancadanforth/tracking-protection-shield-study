@@ -116,9 +116,6 @@ class TrackingProtectionStudy {
 
       const newContainer = doc.createElement("div");
       newContainer.id = `${NEW_TAB_CONTAINER_DIV_ID}`;
-      if (state.OS === "Windows" || state.OS === "Linux") {
-        newContainer.classList.add("windows-or-linux-os");
-      }
       const span = doc.createElement("span");
       span.innerHTML = svg;
       newContainer.append(span);
