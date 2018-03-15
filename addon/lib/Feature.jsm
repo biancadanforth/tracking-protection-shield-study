@@ -1286,6 +1286,7 @@ class Feature {
       pageActionWrapper.setAttribute("id", `${this.PAGE_ACTION_BUTTON_WRAPPER_ID}`);
       pageActionButton = doc.createElementNS(this.XUL_NS, "toolbarbutton");
       pageActionButton.setAttribute("id", `${this.PAGE_ACTION_BUTTON_ID}`);
+      pageActionButton.setAttribute("tooltiptext", "Tracking Protection");
       pageActionButton.setAttribute(
         "image",
         `resource://${STUDY}/content/tp-shield.svg`);

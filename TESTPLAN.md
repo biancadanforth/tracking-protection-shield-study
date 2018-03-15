@@ -38,6 +38,11 @@ See the [User Flow](https://github.com/biancadanforth/tracking-protection-shield
 
 ## Functional Tests to Perform
 
+- Interact with the `about:newtab`/`about:home` page on all branches. Make sure none of the major features on that page are broken and that the page load time does not appear noticeably slow.
+  - Note that #100 has already been raised and triaged as a P3.
+  - Note that Snippets feed is not present on brand new profiles in Firefox 59 independent of my study. I have verified this and followed up with the Activity Stream team.
+- Confirm that the SSL indicator (the green lock icon) on the left-hand side of the URL bar appears when an http(s) page loads from `about:newtab` in all branches.
+- Confirm that the zoom button works and displays properly (Zoom in with CMD/Ctrl +, Zoom out with CMD/Ctrl -) in all branches.
 - If either panel is open when the user changes the window size mode (i.e. the window is maximized, minimized, made full screen or brought to a "normal" size), the panel will be dismissed.
 - If the user has an ad blocker installed (one of: Disconnect, uBlock Origin, AdBlock Plus, AdBlock for Firefox or Ghostery) before the study installs, the study will end with reason = `ineligible`. There is no survey. (#162)
 - If the user installs one of the ad blockers above during the study, the study ends with reason = `user-installed-ad-blocker`. There is a survey. (#162)
