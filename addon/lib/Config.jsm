@@ -101,10 +101,13 @@ const config = {
     // Fatal: 70, Error: 60, Warn: 50, Info: 40, Config: 30, Debug: 20, Trace: 10, All: -1,
     "bootstrap": {
       // Console.jsm uses "debug", whereas Log.jsm uses "Debug", *sigh*
-      "level": "debug",
+      "level": "off", // set to "debug" to enable logging; set to "off" to disable logging
     },
     "studyUtils":  {
-      "level": "Trace",
+      // Log.jsm does not have an "off" setting; "Fatal" is the highest tier of message,
+      // and effectively turns off logging, since there are no `log.fatal(..)` calls in
+      // StudyUtils.jsm.
+      "level": "Fatal", // Set to "Debug" to enable logging; set to "Fatal" to effectively disable logging
     },
   },
 
