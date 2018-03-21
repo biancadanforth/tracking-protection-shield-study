@@ -38,6 +38,8 @@ See the [User Flow](https://github.com/biancadanforth/tracking-protection-shield
 
 ## Functional Tests to Perform
 
+- Make sure for the experimental branches "fast" and "private", the UI surfaces as expected when Firefox is closed and restarted (with and without session restore).
+  - To enable session restore: In `about:preferences`, under General, "When Nightly starts", select "Show your windows and tabs from last time".
 - Interact with the `about:newtab`/`about:home` page on all branches. Make sure none of the major features on that page are broken and that the page load time does not appear noticeably slow.
   - Note that #100 has already been raised and triaged as a P3.
   - Note that Snippets feed is not present on brand new profiles in Firefox 59 independent of my study. I have verified this and followed up with the Activity Stream team.
