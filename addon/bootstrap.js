@@ -9,6 +9,8 @@ XPCOMUtils.defineLazyModuleGetter(this, "Services",
   "resource://gre/modules/Services.jsm");
 XPCOMUtils.defineLazyModuleGetter(this, "Preferences",
   "resource://gre/modules/Preferences.jsm");
+XPCOMUtils.defineLazyModuleGetter(this, "RecentWindow",
+  "resource:///modules/RecentWindow.jsm");
 
 const STUDY = "tracking-protection-messaging-study";
 
@@ -87,7 +89,10 @@ this.Bootstrap = {
     this.log.debug(`info ${JSON.stringify(studyUtils.info())}`);
 
     // make sure the UI is available before adding the feature
-    if (!Services.wm.getMostRecentWindow("navigator:browser")) {
+    if (!RecentWindow.getMostRecentBrowserWindow({
+      private: false,
+      allowPopups: false,
+    })) {
       Services.obs.addObserver(this, this.UI_AVAILABLE_NOTIFICATION);
     } else {
       this.addFeature(this.variation, this.reason);
